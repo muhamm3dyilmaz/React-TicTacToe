@@ -2,8 +2,15 @@ import { useState } from 'react'
 import Player from './components/Player.jsx'
 import GameBoard from './components/GameBoard.jsx'
 import Log from './components/Log.jsx';
+import { WINNING_COMBINATIONS } from './wining-combination.js';
 
-function derivedActicePlayer(gameTurns){
+const initialGameBoard = [
+  [null, null, null],
+  [null, null, null],
+  [null, null, null]
+];
+
+function derivedActicePlayer(gameTurns) {
   let currentPlayer = "X";
 
   if (gameTurns.length > 0 && gameTurns[0].player === "X") {
@@ -18,6 +25,32 @@ function App() {
   // const [activePlayer, setActivePlayer] = useState("X");
 
   const activePlayer = derivedActicePlayer(gameTurns);
+
+  let gameBoard = initialGameBoard;
+
+  for (const turn of gameTurns) {
+    const { square, player } = turn;
+    const { row, column } = square;
+
+    gameBoard[row][column] = player;
+  }
+
+  let winner;
+
+  for (const combination of WINNING_COMBINATIONS) {
+    const firstSquareSymbol = gameBoard[combination[0].row][combination[0].column];
+    const secondSquareSymbol = gameBoard[combination[1].row][combination[1].column];
+    const thirdSquareSymbol = gameBoard[combination[2].row][combination[2].column];
+
+    if
+      (
+      firstSquareSymbol &&
+      firstSquareSymbol === secondSquareSymbol &&
+      firstSquareSymbol === thirdSquareSymbol
+    ) {
+      winner = firstSquareSymbol;
+    }
+  }
 
   function handleSelectSquare(rowIndex, columnIndex) {
     // setActivePlayer((currentActivePlayer) => (currentActivePlayer === "X" ? "O" : "X"));
@@ -44,9 +77,10 @@ function App() {
 
           <Player initialName="Player 2" symbol="O" isActive={activePlayer === "O"} />
         </ol>
-        <GameBoard onSelectSquare={handleSelectSquare} turns={gameTurns} />
+        {winner && <p>You won, {winner}!</p>}
+        <GameBoard onSelectSquare={handleSelectSquare} board={gameBoard} />
       </div>
-      <Log turns={gameTurns}/>
+      <Log turns={gameTurns} />
     </main>
   )
 }
