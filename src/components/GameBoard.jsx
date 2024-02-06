@@ -4,7 +4,17 @@ const initialGameBoard = [
     [null, null, null]
 ];
 
-export default function GameBoard({ onSelectSquare }) {
+export default function GameBoard({ onSelectSquare, turns }) {
+    let gameBoard = initialGameBoard;
+
+    for (const turn of turns){
+        const {square, player} = turn;
+        const {row, column} = square;
+
+        gameBoard[row][column] = player;
+    }
+
+    // we blow them up cuz we are controlling this state in app.jsx file so there is an example for redundant state using
     // const [gameBoard, setGameBoard] = useState(initialGameBoard);
 
     // function handleSelectSquare(rowIndex, columnIndex) {
@@ -24,7 +34,7 @@ export default function GameBoard({ onSelectSquare }) {
                     <ol>
                         {row.map((playerSymbol, columnIndex) =>
                             <li key={columnIndex}>
-                                <button onClick={onSelectSquare}>
+                                <button onClick={() => onSelectSquare(rowIndex, columnIndex)}>
                                     {playerSymbol}
                                 </button>
                             </li>
