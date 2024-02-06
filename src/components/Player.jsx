@@ -5,12 +5,9 @@ export default function Player({ initialName, symbol, isActive, onChangeName }) 
   const [isEditing, setIsEditing] = useState(false);
 
   function handleEditClick() {
-    // '!isEditing' shorter way to type isEditing ? false : true
-    // (editing) => !editing is best practise and common pattern for setting states like true false
     setIsEditing((editing) => !editing);
   }
 
-  //this func for editing the player name
   function handleChange(event) {
     setPlayerName(event.target.value);
 
